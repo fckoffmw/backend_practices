@@ -17,5 +17,6 @@ RUN sed -i 's|/var/www/html|/var/www/app_root|g' /etc/apache2/sites-available/00
 # Копируем конфиг для DBD (укажет параметры подключения к mysql)
 COPY apache-dbd.conf /etc/apache2/conf-available/apache-dbd.conf
 RUN a2enconf apache-dbd
+RUN a2enmod auth_basic
 
 # CMD оставляем стандартный

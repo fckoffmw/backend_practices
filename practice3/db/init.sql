@@ -23,3 +23,5 @@ CREATE TABLE IF NOT EXISTS orders (
 
 
 INSERT INTO users (login, password, is_admin) VALUES ('admin', 'password123', TRUE);
+INSERT INTO users (login, password, is_admin) VALUES ('user1', 'password123', FALSE);
+INSERT INTO users (login, password, is_admin) VALUES ('user2', 'password123', FALSE);
