@@ -14,8 +14,8 @@ if ($entity === 'users') {
             break;
         case 'POST':
             $data = json_decode(file_get_contents("php://input"), true);
-            $stmt = $conn->prepare("INSERT INTO users (name, surname) VALUES (?, ?)");
-            $stmt->bind_param("ss", $data['name'], $data['surname']);
+            $stmt = $conn->prepare("INSERT INTO users (login, password, is_admin) VALUES (?, ?, ?)");
+            $stmt->bind_param("ssi", $data['login'], $data['password'], $data['is_admin']);
             $stmt->execute();
             echo json_encode(['status' => 'User added']);
             break;
