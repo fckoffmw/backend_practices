@@ -20,8 +20,9 @@ CREATE TABLE IF NOT EXISTS orders (
   FOREIGN KEY (user_id) REFERENCES users(ID) ON DELETE CASCADE
 );
 
-
-
 INSERT INTO users (login, password, is_admin) VALUES ('admin', 'password123', TRUE);
 INSERT INTO users (login, password, is_admin) VALUES ('user1', 'password123', FALSE);
 INSERT INTO users (login, password, is_admin) VALUES ('user2', 'password123', FALSE);
+
+INSERT INTO orders (user_id, product, amount) VALUES (2, 'laptop', 100000);
+INSERT INTO orders (user_id, product, amount) VALUES (3, 'mouse', 2000);
