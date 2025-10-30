@@ -1,0 +1,41 @@
+version: "3.0"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: practice_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: appDB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+
+  web:
+    build: ./php
+    container_name: practice_web
+    depends_on:
+      - db
+    volumes:
+      - ./www/app_root:/var/www/app_root
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    container_name: practice_nginx
+    depends_on:
+      - web
+    volumes:
+      - ./www/public_html:/var/www/public_html:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  db_data:

@@ -1,0 +1,25 @@
+CREATE DATABASE IF NOT EXISTS appDB;
+CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'password';
+GRANT SELECT, UPDATE, INSERT, DELETE ON appDB.* TO 'user'@'%';
+FLUSH PRIVILEGES;
+
+USE appDB;
+
+CREATE TABLE IF NOT EXISTS users (
+  ID INT AUTO_INCREMENT PRIMARY KEY,
+  login VARCHAR(50) NOT NULL,
+  password VARCHAR(50) NOT NULL,
+  is_admin BOOLEAN NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+  order_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  product VARCHAR(50),
+  amount DECIMAL(10,2),
+  FOREIGN KEY (user_id) REFERENCES users(ID) ON DELETE CASCADE
+);
+
+
+
+INSERT INTO users (login, password, is_admin) VALUES ('admin', 'password123', TRUE);

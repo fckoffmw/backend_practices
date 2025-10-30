@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>О проекте</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      color: #0078D7;
+    }
+    a {
+      color: #0078D7;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>О проекте</h1>
+  <p>Это учебный проект по предмету <strong>Backend-разработка</strong> — практическая работа №3.</p>
+
+  <p>В проекте используется связка <b>nginx + apache + php + MySQL</b>.  
+  Статические страницы (вроде этой) обслуживаются nginx,  
+  а динамические запросы обрабатывает Apache с PHP.</p>
+
+  <h2>Цель проекта</h2>
+  <p>Цель — реализовать веб-приложение с базовой авторизацией, REST API и разделением ответственности между веб-серверами.</p>
+
+  <ul>
+    <li>nginx — отдаёт статику</li>
+    <li>apache + php — обрабатывают динамику</li>
+    <li>MySQL — хранит данные пользователей и заказов</li>
+  </ul>
+
+  <h2>Связанные страницы</h2>
+  <ul>
+    <li><a href="/index.html">Главная страница</a></li>
+    <li><a href="/app/app.php/users">Пользователи (API)</a></li>
+    <li><a href="/app/app.php/orders">Заказы (API)</a></li>
+    <li><a href="/app/admin.php">Админка</a></li>
+  </ul>
+</body>
+</html>

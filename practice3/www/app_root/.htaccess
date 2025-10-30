@@ -1,0 +1,12 @@
+AuthType Basic
+AuthName "Restricted Area"
+AuthBasicProvider dbd
+
+# AuthDBDUserPWQuery moved to apache-dbd.conf (server config), because this directive is not allowed in .htaccess
+Require valid-user
+
+# Rewrite (оставляем)
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+RewriteRule ^admin$ admin.php [L]
