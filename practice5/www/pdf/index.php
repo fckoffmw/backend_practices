@@ -42,14 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['pdf_file'])) {
                 INSERT INTO pdf_files (user_id, filename, original_name, mime_type, file_size, file_data) 
                 VALUES (?, ?, ?, ?, ?, ?)
             ");
-            $null = null;
-            $stmt->bind_param("isssis", $userId, $fileName, $originalName, $mimeType, $fileSize, $null);
-            $stmt->send_long_data(5, $fileData);
+            
+            // Привязываем параметры (s для blob работает для файлов до ~16MB)
+            $stmt->bind_param("isssis", $userId, $fileName, $originalName, $mimeType, $fileSize, $fileData);
             
             if ($stmt->execute()) {
                 $success = 'Файл успешно загружен!';
             } else {
-                $error = 'Ошибка сохранения файла в БД: ' . $conn->error;
+                $error = 'Ошибка сохранения файла в БД: ' . $stmt->error;
             }
         }
     }

@@ -50,9 +50,9 @@ try {
         case 'POST':
             $data = json_decode(file_get_contents("php://input"), true);
             
-            if (empty($data['login']) || empty($data['password'])) {
+            if (!$data || empty($data['login']) || empty($data['password'])) {
                 http_response_code(400);
-                echo json_encode(['error' => 'Login and password are required']);
+                echo json_encode(['error' => 'Login and password are required. Send JSON body.']);
                 break;
             }
             
@@ -62,11 +62,13 @@ try {
                 VALUES (?, ?, ?, ?, ?)
             ");
             $isAdmin = $data['is_admin'] ?? 0;
+            $name = $data['name'] ?? '';
+            $surname = $data['surname'] ?? '';
             $stmt->bind_param("ssssi", 
                 $data['login'], 
                 $data['password'], 
-                $data['name'] ?? null, 
-                $data['surname'] ?? null, 
+                $name, 
+                $surname, 
                 $isAdmin
             );
             

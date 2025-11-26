@@ -118,33 +118,33 @@ mysql> SELECT id, filename, original_name, file_size, uploaded_at FROM pdf_files
 
 **Получение списка пользователей:**
 ```bash
-curl http://localhost:8080/api/users.php
+curl http://localhost:8085/api/users.php
 ```
 
 **Получение списка заказов:**
 ```bash
-curl http://localhost:8080/api/orders.php
+curl http://localhost:8085/api/orders.php
 ```
 
 **Создание нового пользователя:**
 ```bash
-curl -X POST http://localhost:8080/api/users.php \
+curl -X POST http://localhost:8085/api/users.php \
   -H "Content-Type: application/json" \
   -d '{"login":"newuser","password":"pass123","name":"John","surname":"Doe"}'
 ```
 
 **Создание нового заказа:**
 ```bash
-curl -X POST http://localhost:8080/api/orders.php \
+curl -X POST http://localhost:8085/api/orders.php \
   -H "Content-Type: application/json" \
   -d '{"user_id":2,"product":"Monitor","amount":25000}'
 ```
 
 ### 5. Тестирование сервисов из предыдущих практик
 
-- **Drawer (SVG):** `http://localhost:8080/services/drawer/drawer.php?num=12345`
-- **Sorter:** `http://localhost:8080/services/sort/sort.php`
-- **Admin commands:** `http://localhost:8080/services/admin/admin.php`
+- **Drawer (SVG):** `http://localhost:8085/services/drawer/drawer.php?num=12345`
+- **Sorter:** `http://localhost:8085/services/sort/sort.php`
+- **Admin commands:** `http://localhost:8085/services/admin/admin.php`
 
 ## Тестовые учётные записи
 

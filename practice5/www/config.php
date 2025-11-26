@@ -152,12 +152,23 @@ function saveUserSettings(string $theme, string $language): bool {
     
     // Если пользователь авторизован - сохраняем в БД
     if (isset($_SESSION['user_id'])) {
-        $stmt = $conn->prepare("
-            INSERT INTO user_settings (user_id, theme, language) 
-            VALUES (?, ?, ?) 
-            ON DUPLICATE KEY UPDATE theme = VALUES(theme), language = VALUES(language)
-        ");
-        $stmt->bind_param("iss", $_SESSION['user_id'], $theme, $language);
+        $userId = $_SESSION['user_id'];
+        
+        // Проверяем, есть ли уже настройки
+        $check = $conn->prepare("SELECT id FROM user_settings WHERE user_id = ?");
+        $check->bind_param("i", $userId);
+        $check->execute();
+        $exists = $check->get_result()->fetch_assoc();
+        
+        if ($exists) {
+            // Обновляем существующие
+            $stmt = $conn->prepare("UPDATE user_settings SET theme = ?, language = ? WHERE user_id = ?");
+            $stmt->bind_param("ssi", $theme, $language, $userId);
+        } else {
+            // Создаём новые
+            $stmt = $conn->prepare("INSERT INTO user_settings (user_id, theme, language) VALUES (?, ?, ?)");
+            $stmt->bind_param("iss", $userId, $theme, $language);
+        }
         return $stmt->execute();
     }
     
@@ -287,5 +298,4 @@ function getTranslations(string $lang): array {
     
     return $translations[$lang] ?? $translations['ru'];
 }
-?>
 

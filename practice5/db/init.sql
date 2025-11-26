@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Настройки пользователей для согласования контента
 CREATE TABLE IF NOT EXISTS user_settings (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
+  user_id INT NOT NULL UNIQUE,
   theme ENUM('light', 'dark', 'colorblind') DEFAULT 'light',
   language ENUM('ru', 'en', 'de') DEFAULT 'ru',
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
