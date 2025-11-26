@@ -1,0 +1,76 @@
+version: "3.8"
+
+services:
+  # База данных MySQL
+  db:
+    image: mysql:8.0
+    container_name: practice5_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: appDB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis для хранения сессий
+  redis:
+    image: redis:7-alpine
+    container_name: practice5_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PHP + Apache веб-сервер
+  web:
+    build: ./php
+    container_name: practice5_web
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./www:/var/www/html
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_HOST=db
+      - DB_NAME=appDB
+      - DB_USER=user
+      - DB_PASS=password
+    restart: unless-stopped
+
+  # Nginx как реверс-прокси для статики
+  nginx:
+    image: nginx:latest
+    container_name: practice5_nginx
+    depends_on:
+      - web
+    volumes:
+      - ./www/public:/var/www/public:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  redis_data:
+

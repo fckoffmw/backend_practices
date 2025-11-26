@@ -33,11 +33,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'DELETE':
-        parse_str(file_get_contents("php://input"), $data);
+        $data = json_decode(file_get_contents("php://input"), true);
         $stmt = $conn->prepare("DELETE FROM orders WHERE order_id=?");
         $stmt->bind_param("i", $data['order_id']);
         $stmt->execute();
         echo json_encode(['status' => 'Order deleted']);
         break;
+
 }
 ?>

@@ -5,7 +5,7 @@ AuthBasicProvider dbd
 Require valid-user
 </Files>
 
-# Rewrite (оставляем)
+# Rewrite
 RewriteEngine On
 RewriteCond %{HTTP:Authorization} ^(.*)
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]

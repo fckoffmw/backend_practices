@@ -33,7 +33,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'DELETE':
-        parse_str(file_get_contents("php://input"), $data);
+        $data = json_decode(file_get_contents("php://input"), true);
         $stmt = $conn->prepare("DELETE FROM users WHERE ID=?");
         $stmt->bind_param("i", $data['id']);
         $stmt->execute();
