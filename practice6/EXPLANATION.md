@@ -27,7 +27,7 @@
 **Что требовалось:** Построить минимум 3 графика различного типа с помощью сторонних модулей PHP.
 
 **Что сделано:**
-- Использована библиотека **GD** (встроена в PHP)
+- Использована библиотека **JpGraph** (сторонний модуль через Composer)
 - Создано **3 типа графиков**:
   1. **Столбчатая диаграмма** (Bar Chart) — показывает выручку по категориям товаров
   2. **Круговая диаграмма** (Pie Chart) — показывает распределение продаж по регионам
@@ -269,32 +269,38 @@ $price = $faker->randomFloat(2, 100, 5000); // 1234.56
 $date = $faker->dateTimeBetween('-1 year', 'now'); // случайная дата
 ```
 
-### 3. GD (Graphics Draw)
-**Назначение:** Создание и обработка изображений
+### 3. JpGraph — библиотека для построения графиков
+
+**Назначение:** Создание профессиональных графиков и диаграмм
 
 **Установка:**
-```dockerfile
-# В Dockerfile
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install -j$(nproc) gd
+```bash
+composer require amenadiel/jpgraph
 ```
 
 **Использование:**
 ```php
-// Создание изображения
-$image = imagecreatetruecolor(800, 600);
+use Amenadiel\JpGraph\Graph;
+use Amenadiel\JpGraph\Plot;
 
-// Цвета
-$white = imagecolorallocate($image, 255, 255, 255);
-$black = imagecolorallocate($image, 0, 0, 0);
+// Столбчатая диаграмма
+$graph = new Graph\Graph(800, 600);
+$graph->SetScale('textlin');
+$barplot = new Plot\BarPlot($data);
+$graph->Add($barplot);
+$graph->Stroke('chart.png');
+```
 
-// Рисование
-imageline($image, 0, 0, 100, 100, $black);
-imagefilledrectangle($image, 10, 10, 50, 50, $black);
+### 4. GD — библиотека для водяных знаков
 
-// Сохранение
+**Назначение:** Добавление водяных знаков на готовые графики
+
+**Использование:**
+```php
+$image = imagecreatefrompng('chart.png');
+$textColor = imagecolorallocatealpha($image, 128, 128, 128, 50);
+imagestring($image, 3, $x, $y, 'Watermark', $textColor);
 imagepng($image, 'chart.png');
-imagedestroy($image);
 ```
 
 ## Критерии оценки (как проверяет преподаватель)
