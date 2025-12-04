@@ -1,0 +1,14 @@
+{
+    "name": "practice6/statistics",
+    "description": "Practice 6 - Statistics with Charts and Watermarks",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "fakerphp/faker": "^1.23"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
