@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест аутентификации - Practice 7</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .form-group { margin: 20px 0; }
+        .form-control { padding: 10px; width: 200px; }
+        .btn { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .result { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Тест аутентификации Practice 7</h1>
+    
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Логин:</label><br>
+            <input type="text" id="login" class="form-control" value="admin">
+        </div>
+        <div class="form-group">
+            <label>Пароль:</label><br>
+            <input type="password" id="password" class="form-control" value="password123">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn">Войти</button>
+            <button type="button" class="btn" onclick="checkStatus()">Проверить статус</button>
+            <button type="button" class="btn" onclick="logout()">Выйти</button>
+        </div>
+    </form>
+    
+    <div id="result" class="result"></div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `login=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}`,
+                    credentials: 'include'
+                });
+                
+                if (response.redirected) {
+                    document.getElementById('result').innerHTML = '<strong>Успех!</strong> Перенаправлен на: ' + response.url;
+                    checkStatus();
+                } else {
+                    document.getElementById('result').innerHTML = '<strong>Ошибка:</strong> ' + response.status;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<strong>Ошибка:</strong> ' + error.message;
+            }
+        });
+        
+        async function checkStatus() {
+            try {
+                const response = await fetch('/', {
+                    credentials: 'include'
+                });
+                const html = await response.text();
+                
+                if (html.includes('Привет,')) {
+                    const match = html.match(/Привет, ([^!]+)!/);
+                    if (match) {
+                        document.getElementById('result').innerHTML = '<strong>Авторизован как:</strong> ' + match[1];
+                    } else {
+                        document.getElementById('result').innerHTML = '<strong>Авторизован</strong> (имя не найдено)';
+                    }
+                } else if (html.includes('Войти')) {
+                    document.getElementById('result').innerHTML = '<strong>Не авторизован</strong>';
+                } else {
+                    document.getElementById('result').innerHTML = '<strong>Статус неизвестен</strong>';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<strong>Ошибка проверки:</strong> ' + error.message;
+            }
+        }
+        
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                
+                document.getElementById('result').innerHTML = '<strong>Выход выполнен</strong>';
+                setTimeout(checkStatus, 500);
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<strong>Ошибка выхода:</strong> ' + error.message;
+            }
+        }
+        
+        // Проверяем статус при загрузке страницы
+        checkStatus();
+    </script>
+</body>
+</html>

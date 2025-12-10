@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  # База данных MySQL
+  db:
+    image: mysql:8.0
+    container_name: practice7_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: appDB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3308:3306"
+
+  # Redis для хранения сессий
+  redis:
+    image: redis:7-alpine
+    container_name: practice7_redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+
+  # PHP + Apache веб-сервер
+  web:
+    build: ./php
+    container_name: practice7_web
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./www:/var/www/html
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_HOST=db
+      - DB_NAME=appDB
+      - DB_USER=user
+      - DB_PASS=password
+    ports:
+      - "8087:80"
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  redis_data:
